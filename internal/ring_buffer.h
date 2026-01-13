@@ -250,7 +250,7 @@ class SpscRingBuffer {
 
 
             everywhere GetSlot is passing with index so here it will return lets say 4*size(T)th address.
-            knowing that next obj's address is 5*size(T)th address so we have enough space to store obj.
+            knowing that next object's address is 5*size(T)th address so we have enough space to store obj.
         */
         return reinterpret_cast<T *>(&storage_[index * sizeof(T)]);
     }
