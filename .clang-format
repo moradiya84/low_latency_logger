@@ -1,0 +1,10 @@
+---
+# Disable column limit to allow single-line code
+ColumnLimit: 0
+
+# Keep other sensible defaults
+Language: Cpp
+Standard: c++17
+IndentWidth: 4
+UseTab: Never
+TabWidth: 4
