@@ -97,6 +97,19 @@ class SpscRingBuffer {
      * @return true if successful, false if full.
      */
     bool TryPush(const T &element) noexcept {
+        /*
+            memory_order specifies how memory is ordered around atomic operations for both atomic and non-atomic memory access.
+
+            memory_order_relaxed: no ordering constraints are applied
+            why is it used here because only thread accessing/writing data is producer so no need to order memory access
+
+            memory_order_acquire: acquire ordering constraint
+            why is it used here because consumer thread is reading data so it needs to see the read progress
+
+            while pushing data when we are trying to load write_idx which is producer's index so there is no need to order memory access
+            but when we are trying to load read_idx which is consumer's index so there is need to order memory access
+        */
+
         // Load indices
         // Relaxed load for producer's own index (exclusive ownership)
         const size_t write_idx = write_index_.value.load(std::memory_order_relaxed);
@@ -115,7 +128,27 @@ class SpscRingBuffer {
         new (GetSlot(offset)) T(element);
 
         // Publish
-        // Release semantics to make the new element visible to consumer
+        /*
+            memory_order_release: release ordering constraint
+            why is it used here because producer thread is writing data so it needs to see the write progress
+
+            so when someone tries to load write_idx it will see the new updated value if they are using memory_order_acquire likw we did above.
+            memory_order means how memory is ordered around atomic operations for both atomic and non-atomic memory access to optimize performance.
+
+            let' say one thread write following code
+            x=1
+            y=2
+            flag.store(1,memory_release)
+            z=3
+
+            and anothre thread read following code
+            flag.load(memory_acquire)
+            x1=x
+            y1=y
+            z1=z
+
+            then it is guaranteed that x1 will be 1,y1 will be 2, but z1 may/maynot be 3.
+        */
         write_index_.value.store(write_idx + 1, std::memory_order_release);
         return true;
     }
@@ -151,10 +184,14 @@ class SpscRingBuffer {
      */
     bool TryPop(T &out_element) noexcept {
         // Load indices
+        // Acquire load for producer's index to ensure we see the data
+        /*
+            see here we are using acquire for writting because the thread which is consuming data is the same
+            thread which is responsible for writting read_idx so no need of synchronization.
+        */
+        const size_t write_idx = write_index_.value.load(std::memory_order_acquire);
         // Relaxed load for consumer's own index
         const size_t read_idx = read_index_.value.load(std::memory_order_relaxed);
-        // Acquire load for producer's index to ensure we see the data
-        const size_t write_idx = write_index_.value.load(std::memory_order_acquire);
 
         // Check empty condition
         if (read_idx == write_idx) {
@@ -206,17 +243,32 @@ class SpscRingBuffer {
   private:
     // Helper to get raw pointer to slot
     T *GetSlot(size_t index) noexcept {
+        /*
+            what reinterpret_cast does is it tells compiler that treat this address as T*.
+            initially storage_ is unsigned char array so we are just accessing the address of that array
+            and then we are telling compiler that treat this address as T*.
+
+
+            everywhere GetSlot is passing with index so here it will return lets say 4*size(T)th address.
+            knowing that next obj's address is 5*size(T)th address so we have enough space to store obj.
+        */
         return reinterpret_cast<T *>(&storage_[index * sizeof(T)]);
     }
 
     /*Storage and Alignment Layout*/
 
     // Structure to enforce cache line separation for atomic indices
+
+    /*
+    if we write alignas(64) IndexWrapper idx; it will be at address of multiple of 64 but it won't be padded to 64 bytes.
+    but if we write
+    struct alignof(64) Indexwrapper{
+        int x; //only 4 byte;
+    }
+    then each object will be padded to 64 bytes.
+    */
     struct alignas(kCacheLineSize) IndexWrapper {
         std::atomic<size_t> value{0};
-        // Padding is implicit due to alignas, but we rely on the struct size
-        // being a multiple of kCacheLineSize to separate subsequent members.
-        char padding[kCacheLineSize - sizeof(std::atomic<size_t>)];
     };
 
     // Producer-owned state
@@ -234,6 +286,8 @@ class SpscRingBuffer {
     static_assert(offsetof(SpscRingBuffer, read_index_) - offsetof(SpscRingBuffer, write_index_) >= kCacheLineSize,
                   "Producer and Consumer indices must be on separate cache lines");
     static_assert(offsetof(SpscRingBuffer, storage_) - offsetof(SpscRingBuffer, read_index_) >= kCacheLineSize,
+                  "Storage must be on a separate cache line from indices");
+    static_assert(offsetof(SpscRingBuffer, storage_) - offsetof(SpscRingBuffer, write_index_) >= kCacheLineSize,
                   "Storage must be on a separate cache line from indices");
 };
 
