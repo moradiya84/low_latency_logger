@@ -58,7 +58,8 @@ inline constexpr std::size_t kCacheLineSize = 64;
 #if defined(__cpp_lib_hardware_interference_size) && __cpp_lib_hardware_interference_size >= 201703L
 inline constexpr std::size_t kDestructiveInterferenceSize = (std::hardware_destructive_interference_size > kCacheLineSize) ? std::hardware_destructive_interference_size : kCacheLineSize;
 #else
-inline constexpr std::size_t kDestructiveInterferenceSize = (std::hardware_destructive_interference_size > kCacheLineSize) ? std::hardware_destructive_interference_size : kCacheLineSize;
+// Fallback when hardware_interference_size is not available
+inline constexpr std::size_t kDestructiveInterferenceSize = kCacheLineSize;
 #endif
 
 /**
@@ -74,7 +75,8 @@ inline constexpr std::size_t kDestructiveInterferenceSize = (std::hardware_destr
 #if defined(__cpp_lib_hardware_interference_size) && __cpp_lib_hardware_interference_size >= 201703L
 inline constexpr std::size_t kConstructiveInterferenceSize = (std::hardware_constructive_interference_size < kCacheLineSize) ? std::hardware_constructive_interference_size : kCacheLineSize;
 #else
-inline constexpr std::size_t kConstructiveInterferenceSize = (std::hardware_constructive_interference_size < kCacheLineSize) ? std::hardware_constructive_interference_size : kCacheLineSize;
+// Fallback when hardware_interference_size is not available
+inline constexpr std::size_t kConstructiveInterferenceSize = kCacheLineSize;
 #endif
 
 // Cache-line alignment macro / attribute
