@@ -1,0 +1,70 @@
+/**
+ * @file sink.h
+ * @brief Abstract interface for log output destinations
+ *
+ * Defines the Sink interface that all log output destinations must implement.
+ * This is a pure interface with no concrete implementation.
+ *
+ * RESPONSIBILITIES:
+ * - Define Write() and Flush() interface
+ * - Virtual destructor for proper cleanup
+ *
+ * ANTI-RESPONSIBILITIES:
+ * - No concrete implementation (that goes in src/)
+ * - No buffering logic (sink implementation decides)
+ * - No formatting (formatter's job)
+ */
+
+#ifndef LOGGER_SINK_H
+#define LOGGER_SINK_H
+
+#include <cstddef>
+
+namespace logger {
+
+/**
+ * @brief Abstract interface for log output destinations
+ *
+ * Implementations include:
+ * - FileSink: writes to a file
+ * - ConsoleSink: writes to stdout/stderr
+ * - NullSink: discards all output (for benchmarking)
+ *
+ * Called ONLY from the consumer thread (never from hot path).
+ */
+class Sink {
+  public:
+    virtual ~Sink() = default;
+
+    /**
+     * @brief Write formatted log data to the output
+     * @param data Pointer to the formatted log data
+     * @param len Number of bytes to write
+     *
+     * Called by the consumer thread after formatting.
+     * Implementation may buffer internally.
+     */
+    virtual void Write(const char *data, std::size_t len) = 0;
+
+    /**
+     * @brief Flush any buffered data to the underlying output
+     *
+     * Called periodically by the consumer or on shutdown.
+     * Must ensure all previously written data is persisted.
+     */
+    virtual void Flush() = 0;
+
+    // Non-copyable, non-movable (owned by unique_ptr)
+    Sink(const Sink &) = delete;
+    Sink &operator=(const Sink &) = delete;
+    Sink(Sink &&) = delete;
+    Sink &operator=(Sink &&) = delete;
+
+  protected:
+    // Only derived classes can construct
+    Sink() = default;
+};
+
+} // namespace logger
+
+#endif // LOGGER_SINK_H
