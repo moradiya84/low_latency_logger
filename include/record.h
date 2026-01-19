@@ -39,31 +39,36 @@ namespace logger {
  * Layout is cache-line aligned to prevent false sharing in the ring buffer.
  */
 struct alignas(internal::kCacheLineSize) LogRecord {
-    // === Core fields (always present) ===
+    /*Core fields (always present/necessary)*/
 
-    Level level;                // 1 byte
-    std::uint8_t padding1[7];   // 7 bytes (alignment)
-    std::uint64_t timestamp;    // 8 bytes (TSC or nanoseconds)
-    std::size_t message_length; // 8 bytes
+    Level level;                                                                 // 1 byte
+    internal::CachelinePad<sizeof(Level)> padding1;                              // (alignment)
+    std::uint64_t timestamp;                                                     // 8 bytes (TSC or nanoseconds)
+    std::size_t message_length;                                                  // 8 bytes
+    internal::CachelinePad<sizeof(timestamp) + sizeof(message_length)> padding2; // (alignment)
 
-    // === Optional fields (conditionally compiled) ===
+    /*Optional fields (conditionally compiled)*/
 
 #if LOGGER_ENABLE_THREAD_ID
     std::uint64_t thread_id; // 8 bytes
+    internal::CachelinePad<sizeof(thread_id)> padding3;
 #endif
 
 #if LOGGER_ENABLE_SOURCE_LOCATION
-    const char *file;         // 8 bytes (pointer to static string)
-    const char *function;     // 8 bytes (pointer to static string)
-    std::int32_t line;        // 4 bytes
-    std::uint8_t padding2[4]; // 4 bytes (alignment)
+    const char *file;                                      // pointer to __FILE__ (static string)
+    internal::CachelinePad<sizeof(file)> padding_file;     // pad to cache line
+    const char *function;                                  // pointer to __func__ (static string)
+    internal::CachelinePad<sizeof(function)> padding_func; // pad to cache line
+    std::int32_t line;                                     // line number from __LINE__
+    internal::CachelinePad<sizeof(line)> padding_line;     // pad to cache line
+
 #endif
 
-    // === Message payload (fixed-size buffer) ===
+    /*Message payload (fixed-size buffer)*/
 
     char message[LOGGER_MAX_MESSAGE_SIZE]; // N bytes from config.h
 
-    // === Methods ===
+    /*Methods*/
 
     /**
      * @brief Set the message content (copy from null-terminated string)
@@ -126,6 +131,10 @@ struct alignas(internal::kCacheLineSize) LogRecord {
         }
         // snprintf returns the number of characters that would have been written
         // (excluding null terminator), or negative on error
+        /*
+        lets say our fmt was smth like || "hi your number is %d" then we need argument int so thats
+        what args... is for and it will be expanded to int so that snprintf can use it
+        */
         int result = std::snprintf(message, LOGGER_MAX_MESSAGE_SIZE, fmt, args...);
         if (result < 0) {
             message[0] = '\0';
@@ -133,6 +142,10 @@ struct alignas(internal::kCacheLineSize) LogRecord {
             return 0;
         }
         // Clamp to buffer size
+        /*
+            so say this string "hi your number is %d" and we pass 10 as argument so snprintf will
+            return 18.LOGGER_MAX_MESSAGE_SIZE then we will clamp it to LOGGER_MAX_MESSAGE_SIZE - 1
+        */
         message_length = (static_cast<std::size_t>(result) < LOGGER_MAX_MESSAGE_SIZE)
                              ? static_cast<std::size_t>(result)
                              : LOGGER_MAX_MESSAGE_SIZE - 1;
@@ -154,7 +167,7 @@ struct alignas(internal::kCacheLineSize) LogRecord {
 #endif
 };
 
-// === Compile-time validation ===
+/* Compile-time validation */
 
 // Ensure LogRecord is cache-line aligned
 static_assert(alignof(LogRecord) >= internal::kCacheLineSize,
