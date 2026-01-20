@@ -34,6 +34,10 @@ namespace logger {
  */
 class Sink {
   public:
+    /*
+      deconstructor is virtual so that derived class destructor is called before base class destructor
+      if we don't make it virtual then only base class destructor will be called and derived class destructor will not be called
+    */
     virtual ~Sink() = default;
 
     /**
@@ -54,7 +58,7 @@ class Sink {
      */
     virtual void Flush() = 0;
 
-    // Non-copyable, non-movable (owned by unique_ptr)
+    // Non-copyable, non-movable
     Sink(const Sink &) = delete;
     Sink &operator=(const Sink &) = delete;
     Sink(Sink &&) = delete;
