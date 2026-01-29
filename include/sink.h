@@ -2,23 +2,26 @@
  * @file sink.h
  * @brief Abstract interface for log output destinations
  *
- * Defines the Sink interface that all log output destinations must implement.
- * This is a pure interface with no concrete implementation.
+ * Defines the Sink interface and a few minimal concrete implementations.
  *
  * RESPONSIBILITIES:
  * - Define Write() and Flush() interface
  * - Virtual destructor for proper cleanup
  *
  * ANTI-RESPONSIBILITIES:
- * - No concrete implementation (that goes in src/)
- * - No buffering logic (sink implementation decides)
  * - No formatting (formatter's job)
+ * - No buffering logic (sink implementation decides)
+ * - Keep I/O off the producer hot path (consumer thread only)
  */
 
 #ifndef LOGGER_SINK_H
 #define LOGGER_SINK_H
 
+#include "../internal/cacheline.h"
+
 #include <cstddef>
+#include <cstdint>
+#include <cstdio>
 
 namespace logger {
 
@@ -67,6 +70,73 @@ class Sink {
   protected:
     // Only derived classes can construct
     Sink() = default;
+};
+
+/**
+ * @brief File-backed sink (append-only)
+ *
+ * Uses stdio buffering; called only from the consumer thread.
+ */
+class alignas(internal::kCacheLineSize) FileSink final : public Sink {
+  public:
+    explicit FileSink(const char *path, const char *mode = "ab") noexcept
+        : file_(path ? std::fopen(path, mode) : nullptr) {}
+
+    ~FileSink() override {
+        if (file_) {
+            std::fclose(file_);
+        }
+    }
+
+    void Write(const char *data, std::size_t len) override {
+        if (!file_ || !data || len == 0) {
+            return;
+        }
+        (void)std::fwrite(data, 1, len, file_);
+    }
+
+    void Flush() override {
+        if (file_) {
+            std::fflush(file_);
+        }
+    }
+
+  private:
+    std::FILE *file_;
+};
+
+/**
+ * @brief Console sink (stdout or stderr)
+ */
+class alignas(internal::kCacheLineSize) ConsoleSink final : public Sink {
+  public:
+    enum class Stream : std::uint8_t { Stdout, Stderr };
+
+    explicit ConsoleSink(Stream stream = Stream::Stdout) noexcept
+        : stream_(stream == Stream::Stdout ? stdout : stderr) {}
+
+    void Write(const char *data, std::size_t len) override {
+        if (!data || len == 0) {
+            return;
+        }
+        (void)std::fwrite(data, 1, len, stream_);
+    }
+
+    void Flush() override {
+        (void)std::fflush(stream_);
+    }
+
+  private:
+    std::FILE *stream_;
+};
+
+/**
+ * @brief Null sink (drops all output)
+ */
+class alignas(internal::kCacheLineSize) NullSink final : public Sink {
+  public:
+    void Write(const char *, std::size_t) override {}
+    void Flush() override {}
 };
 
 } // namespace logger
