@@ -13,7 +13,7 @@ std::size_t TextFormatter::FormatRecord(const LogRecord &record, char *buffer, s
     }
 
     std::size_t pos = 0;
-
+    //
     auto appendf = [&](const char *fmt, ...) -> bool {
         if (pos >= capacity) {
             return false;
