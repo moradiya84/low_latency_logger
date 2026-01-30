@@ -71,5 +71,52 @@ class Sink {
     // Only derived classes can construct
     Sink() = default;
 };
+
+/**
+ * @brief File-backed sink (append-only)
+ *
+ * Uses stdio buffering; called only from the consumer thread.
+ */
+class alignas(internal::kCacheLineSize) FileSink final : public Sink {
+  public:
+    explicit FileSink(const char *path, const char *mode = "ab") noexcept;
+    /* once base class deconstructor is virtual all of it's child classes are virtual as well so it runs even when compiler deletes sink obj.
+       override keyword just to verify at compile time that base class also have virtual deconstructor
+      override is not neccasary for deconstructor it will always overide virtual deconstructor from parent class
+    */
+    ~FileSink() override;
+    // same here writting override is not ne
+    void Write(const char *data, std::size_t len) override;
+    void Flush() override;
+
+  private:
+    std::FILE *file_;
+};
+
+/**
+ * @brief Console sink (stdout or stderr)
+ */
+class alignas(internal::kCacheLineSize) ConsoleSink final : public Sink {
+  public:
+    enum class Stream : std::uint8_t { Stdout,
+                                       Stderr };
+
+    explicit ConsoleSink(Stream stream = Stream::Stdout) noexcept;
+
+    void Write(const char *data, std::size_t len) override;
+    void Flush() override;
+
+  private:
+    std::FILE *stream_;
+};
+
+/**
+ * @brief Null sink (drops all output)
+ */
+class alignas(internal::kCacheLineSize) NullSink final : public Sink {
+  public:
+    void Write(const char *, std::size_t) override;
+    void Flush() override;
+};
 } // namespace logger
 #endif // LOGGER_SINK_H
