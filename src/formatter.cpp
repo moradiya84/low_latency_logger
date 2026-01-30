@@ -1,6 +1,7 @@
 #include "../include/formatter.h"
 #include "../include/level.h"
 #include "../include/record.h"
+#include "../internal/clock.h"
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -35,8 +36,9 @@ std::size_t TextFormatter::FormatRecord(const LogRecord &record, char *buffer, s
         return true;
     };
 
+    const std::uint64_t timestamp_ns = internal::TscToNanoseconds(record.timestamp);
     (void)appendf("[%llu] [%s]",
-                  static_cast<unsigned long long>(record.timestamp),
+                  static_cast<unsigned long long>(timestamp_ns),
                   LevelToString(record.level));
 
 #if LOGGER_ENABLE_THREAD_ID
