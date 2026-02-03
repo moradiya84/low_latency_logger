@@ -48,4 +48,9 @@ set(CMAKE_MAKEFILE_PRODUCTS
 
 # Dependency information for all targets:
 set(CMAKE_DEPEND_INFO_FILES
+  "CMakeFiles/low_latency_logger.dir/DependInfo.cmake"
+  "CMakeFiles/ring_buffer_test.dir/DependInfo.cmake"
+  "CMakeFiles/ordering_test.dir/DependInfo.cmake"
+  "CMakeFiles/latency_test.dir/DependInfo.cmake"
+  "CMakeFiles/test_compile_ringbuffer.dir/DependInfo.cmake"
   )

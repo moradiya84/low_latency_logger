@@ -65,6 +65,16 @@ CMAKE_BINARY_DIR = /Users/moradiya84/Desktop/low_latency_logger/build
 #=============================================================================
 # Targets provided globally by CMake.
 
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
+	/opt/homebrew/bin/ctest $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+.PHONY : test/fast
+
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
@@ -116,6 +126,263 @@ depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
+#=============================================================================
+# Target rules for targets named low_latency_logger
+
+# Build rule for target.
+low_latency_logger: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 low_latency_logger
+.PHONY : low_latency_logger
+
+# fast build rule for target.
+low_latency_logger/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/build
+.PHONY : low_latency_logger/fast
+
+#=============================================================================
+# Target rules for targets named ring_buffer_test
+
+# Build rule for target.
+ring_buffer_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ring_buffer_test
+.PHONY : ring_buffer_test
+
+# fast build rule for target.
+ring_buffer_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ring_buffer_test.dir/build.make CMakeFiles/ring_buffer_test.dir/build
+.PHONY : ring_buffer_test/fast
+
+#=============================================================================
+# Target rules for targets named ordering_test
+
+# Build rule for target.
+ordering_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 ordering_test
+.PHONY : ordering_test
+
+# fast build rule for target.
+ordering_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ordering_test.dir/build.make CMakeFiles/ordering_test.dir/build
+.PHONY : ordering_test/fast
+
+#=============================================================================
+# Target rules for targets named latency_test
+
+# Build rule for target.
+latency_test: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 latency_test
+.PHONY : latency_test
+
+# fast build rule for target.
+latency_test/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency_test.dir/build.make CMakeFiles/latency_test.dir/build
+.PHONY : latency_test/fast
+
+#=============================================================================
+# Target rules for targets named test_compile_ringbuffer
+
+# Build rule for target.
+test_compile_ringbuffer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_compile_ringbuffer
+.PHONY : test_compile_ringbuffer
+
+# fast build rule for target.
+test_compile_ringbuffer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_compile_ringbuffer.dir/build.make CMakeFiles/test_compile_ringbuffer.dir/build
+.PHONY : test_compile_ringbuffer/fast
+
+src/clock.o: src/clock.cpp.o
+.PHONY : src/clock.o
+
+# target to build an object file
+src/clock.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/clock.cpp.o
+.PHONY : src/clock.cpp.o
+
+src/clock.i: src/clock.cpp.i
+.PHONY : src/clock.i
+
+# target to preprocess a source file
+src/clock.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/clock.cpp.i
+.PHONY : src/clock.cpp.i
+
+src/clock.s: src/clock.cpp.s
+.PHONY : src/clock.s
+
+# target to generate assembly for a file
+src/clock.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/clock.cpp.s
+.PHONY : src/clock.cpp.s
+
+src/encoder.o: src/encoder.cpp.o
+.PHONY : src/encoder.o
+
+# target to build an object file
+src/encoder.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/encoder.cpp.o
+.PHONY : src/encoder.cpp.o
+
+src/encoder.i: src/encoder.cpp.i
+.PHONY : src/encoder.i
+
+# target to preprocess a source file
+src/encoder.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/encoder.cpp.i
+.PHONY : src/encoder.cpp.i
+
+src/encoder.s: src/encoder.cpp.s
+.PHONY : src/encoder.s
+
+# target to generate assembly for a file
+src/encoder.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/encoder.cpp.s
+.PHONY : src/encoder.cpp.s
+
+src/formatter.o: src/formatter.cpp.o
+.PHONY : src/formatter.o
+
+# target to build an object file
+src/formatter.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/formatter.cpp.o
+.PHONY : src/formatter.cpp.o
+
+src/formatter.i: src/formatter.cpp.i
+.PHONY : src/formatter.i
+
+# target to preprocess a source file
+src/formatter.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/formatter.cpp.i
+.PHONY : src/formatter.cpp.i
+
+src/formatter.s: src/formatter.cpp.s
+.PHONY : src/formatter.s
+
+# target to generate assembly for a file
+src/formatter.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/formatter.cpp.s
+.PHONY : src/formatter.cpp.s
+
+src/sink.o: src/sink.cpp.o
+.PHONY : src/sink.o
+
+# target to build an object file
+src/sink.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/sink.cpp.o
+.PHONY : src/sink.cpp.o
+
+src/sink.i: src/sink.cpp.i
+.PHONY : src/sink.i
+
+# target to preprocess a source file
+src/sink.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/sink.cpp.i
+.PHONY : src/sink.cpp.i
+
+src/sink.s: src/sink.cpp.s
+.PHONY : src/sink.s
+
+# target to generate assembly for a file
+src/sink.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/low_latency_logger.dir/build.make CMakeFiles/low_latency_logger.dir/src/sink.cpp.s
+.PHONY : src/sink.cpp.s
+
+test_compile_ringbuffer.o: test_compile_ringbuffer.cc.o
+.PHONY : test_compile_ringbuffer.o
+
+# target to build an object file
+test_compile_ringbuffer.cc.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_compile_ringbuffer.dir/build.make CMakeFiles/test_compile_ringbuffer.dir/test_compile_ringbuffer.cc.o
+.PHONY : test_compile_ringbuffer.cc.o
+
+test_compile_ringbuffer.i: test_compile_ringbuffer.cc.i
+.PHONY : test_compile_ringbuffer.i
+
+# target to preprocess a source file
+test_compile_ringbuffer.cc.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_compile_ringbuffer.dir/build.make CMakeFiles/test_compile_ringbuffer.dir/test_compile_ringbuffer.cc.i
+.PHONY : test_compile_ringbuffer.cc.i
+
+test_compile_ringbuffer.s: test_compile_ringbuffer.cc.s
+.PHONY : test_compile_ringbuffer.s
+
+# target to generate assembly for a file
+test_compile_ringbuffer.cc.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_compile_ringbuffer.dir/build.make CMakeFiles/test_compile_ringbuffer.dir/test_compile_ringbuffer.cc.s
+.PHONY : test_compile_ringbuffer.cc.s
+
+tests/latency_test.o: tests/latency_test.cpp.o
+.PHONY : tests/latency_test.o
+
+# target to build an object file
+tests/latency_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency_test.dir/build.make CMakeFiles/latency_test.dir/tests/latency_test.cpp.o
+.PHONY : tests/latency_test.cpp.o
+
+tests/latency_test.i: tests/latency_test.cpp.i
+.PHONY : tests/latency_test.i
+
+# target to preprocess a source file
+tests/latency_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency_test.dir/build.make CMakeFiles/latency_test.dir/tests/latency_test.cpp.i
+.PHONY : tests/latency_test.cpp.i
+
+tests/latency_test.s: tests/latency_test.cpp.s
+.PHONY : tests/latency_test.s
+
+# target to generate assembly for a file
+tests/latency_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/latency_test.dir/build.make CMakeFiles/latency_test.dir/tests/latency_test.cpp.s
+.PHONY : tests/latency_test.cpp.s
+
+tests/ordering_test.o: tests/ordering_test.cpp.o
+.PHONY : tests/ordering_test.o
+
+# target to build an object file
+tests/ordering_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ordering_test.dir/build.make CMakeFiles/ordering_test.dir/tests/ordering_test.cpp.o
+.PHONY : tests/ordering_test.cpp.o
+
+tests/ordering_test.i: tests/ordering_test.cpp.i
+.PHONY : tests/ordering_test.i
+
+# target to preprocess a source file
+tests/ordering_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ordering_test.dir/build.make CMakeFiles/ordering_test.dir/tests/ordering_test.cpp.i
+.PHONY : tests/ordering_test.cpp.i
+
+tests/ordering_test.s: tests/ordering_test.cpp.s
+.PHONY : tests/ordering_test.s
+
+# target to generate assembly for a file
+tests/ordering_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ordering_test.dir/build.make CMakeFiles/ordering_test.dir/tests/ordering_test.cpp.s
+.PHONY : tests/ordering_test.cpp.s
+
+tests/ring_buffer_test.o: tests/ring_buffer_test.cpp.o
+.PHONY : tests/ring_buffer_test.o
+
+# target to build an object file
+tests/ring_buffer_test.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ring_buffer_test.dir/build.make CMakeFiles/ring_buffer_test.dir/tests/ring_buffer_test.cpp.o
+.PHONY : tests/ring_buffer_test.cpp.o
+
+tests/ring_buffer_test.i: tests/ring_buffer_test.cpp.i
+.PHONY : tests/ring_buffer_test.i
+
+# target to preprocess a source file
+tests/ring_buffer_test.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ring_buffer_test.dir/build.make CMakeFiles/ring_buffer_test.dir/tests/ring_buffer_test.cpp.i
+.PHONY : tests/ring_buffer_test.cpp.i
+
+tests/ring_buffer_test.s: tests/ring_buffer_test.cpp.s
+.PHONY : tests/ring_buffer_test.s
+
+# target to generate assembly for a file
+tests/ring_buffer_test.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ring_buffer_test.dir/build.make CMakeFiles/ring_buffer_test.dir/tests/ring_buffer_test.cpp.s
+.PHONY : tests/ring_buffer_test.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -124,6 +391,36 @@ help:
 	@echo "... depend"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... test"
+	@echo "... latency_test"
+	@echo "... low_latency_logger"
+	@echo "... ordering_test"
+	@echo "... ring_buffer_test"
+	@echo "... test_compile_ringbuffer"
+	@echo "... src/clock.o"
+	@echo "... src/clock.i"
+	@echo "... src/clock.s"
+	@echo "... src/encoder.o"
+	@echo "... src/encoder.i"
+	@echo "... src/encoder.s"
+	@echo "... src/formatter.o"
+	@echo "... src/formatter.i"
+	@echo "... src/formatter.s"
+	@echo "... src/sink.o"
+	@echo "... src/sink.i"
+	@echo "... src/sink.s"
+	@echo "... test_compile_ringbuffer.o"
+	@echo "... test_compile_ringbuffer.i"
+	@echo "... test_compile_ringbuffer.s"
+	@echo "... tests/latency_test.o"
+	@echo "... tests/latency_test.i"
+	@echo "... tests/latency_test.s"
+	@echo "... tests/ordering_test.o"
+	@echo "... tests/ordering_test.i"
+	@echo "... tests/ordering_test.s"
+	@echo "... tests/ring_buffer_test.o"
+	@echo "... tests/ring_buffer_test.i"
+	@echo "... tests/ring_buffer_test.s"
 .PHONY : help
 
 

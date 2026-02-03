@@ -1,0 +1,2 @@
+/usr/bin/ar qc liblow_latency_logger.a CMakeFiles/low_latency_logger.dir/src/formatter.cpp.o CMakeFiles/low_latency_logger.dir/src/sink.cpp.o CMakeFiles/low_latency_logger.dir/src/clock.cpp.o CMakeFiles/low_latency_logger.dir/src/encoder.cpp.o
+/usr/bin/ranlib liblow_latency_logger.a

@@ -1,0 +1,1 @@
+/usr/bin/clang++ -std=c++20 -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/ordering_test.dir/tests/ordering_test.cpp.o -o ordering_test  liblow_latency_logger.a

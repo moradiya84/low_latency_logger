@@ -203,6 +203,12 @@ CMAKE_TAPI:FILEPATH=/Library/Developer/CommandLineTools/usr/bin/tapi
 // Studio IDE projects all commands are done without /nologo.
 CMAKE_VERBOSE_MAKEFILE:BOOL=FALSE
 
+//Build low_latency_logger benchmarks
+LLL_BUILD_BENCHMARKS:BOOL=OFF
+
+//Build low_latency_logger tests
+LLL_BUILD_TESTS:BOOL=ON
+
 //Value Computed by CMake
 low_latency_logger_BINARY_DIR:STATIC=/Users/moradiya84/Desktop/low_latency_logger/build
 

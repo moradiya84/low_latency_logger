@@ -1,0 +1,50 @@
+[
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/low_latency_logger.dir/src/formatter.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/src/formatter.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/src/formatter.cpp",
+  "output": "CMakeFiles/low_latency_logger.dir/src/formatter.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/low_latency_logger.dir/src/sink.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/src/sink.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/src/sink.cpp",
+  "output": "CMakeFiles/low_latency_logger.dir/src/sink.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/low_latency_logger.dir/src/clock.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/src/clock.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/src/clock.cpp",
+  "output": "CMakeFiles/low_latency_logger.dir/src/clock.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/low_latency_logger.dir/src/encoder.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/src/encoder.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/src/encoder.cpp",
+  "output": "CMakeFiles/low_latency_logger.dir/src/encoder.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/ring_buffer_test.dir/tests/ring_buffer_test.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/tests/ring_buffer_test.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/tests/ring_buffer_test.cpp",
+  "output": "CMakeFiles/ring_buffer_test.dir/tests/ring_buffer_test.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/ordering_test.dir/tests/ordering_test.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/tests/ordering_test.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/tests/ordering_test.cpp",
+  "output": "CMakeFiles/ordering_test.dir/tests/ordering_test.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/latency_test.dir/tests/latency_test.cpp.o -c /Users/moradiya84/Desktop/low_latency_logger/tests/latency_test.cpp",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/tests/latency_test.cpp",
+  "output": "CMakeFiles/latency_test.dir/tests/latency_test.cpp.o"
+},
+{
+  "directory": "/Users/moradiya84/Desktop/low_latency_logger/build",
+  "command": "/usr/bin/clang++  -I/Users/moradiya84/Desktop/low_latency_logger/include -I/Users/moradiya84/Desktop/low_latency_logger/internal -std=c++20 -g -std=c++17 -arch arm64 -o CMakeFiles/test_compile_ringbuffer.dir/test_compile_ringbuffer.cc.o -c /Users/moradiya84/Desktop/low_latency_logger/test_compile_ringbuffer.cc",
+  "file": "/Users/moradiya84/Desktop/low_latency_logger/test_compile_ringbuffer.cc",
+  "output": "CMakeFiles/test_compile_ringbuffer.dir/test_compile_ringbuffer.cc.o"
+}
+]

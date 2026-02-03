@@ -1,2 +1,8 @@
+/Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/low_latency_logger.dir
+/Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/ring_buffer_test.dir
+/Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/ordering_test.dir
+/Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/latency_test.dir
+/Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/test_compile_ringbuffer.dir
+/Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/test.dir
 /Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/edit_cache.dir
 /Users/moradiya84/Desktop/low_latency_logger/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,1 @@
+/usr/bin/clang++ -std=c++20 -g -arch arm64 -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/test_compile_ringbuffer.dir/test_compile_ringbuffer.cc.o -o test_compile_ringbuffer  liblow_latency_logger.a
