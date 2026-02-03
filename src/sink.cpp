@@ -1,9 +1,14 @@
 #include "../include/sink.h"
+#include "../include/error.h"
 
 namespace logger {
 
 FileSink::FileSink(const char *path, const char *mode) noexcept
-    : file_(path ? std::fopen(path, mode) : nullptr) {}
+    : file_(path ? std::fopen(path, mode) : nullptr) {
+    if (!file_ && path) {
+        ReportError(ErrorCode::FileOpenFailed, "FileSink open failed");
+    }
+}
 
 FileSink::~FileSink() {
     if (file_) {
@@ -15,12 +20,16 @@ void FileSink::Write(const char *data, std::size_t len) {
     if (!file_ || !data || len == 0) {
         return;
     }
-    (void)std::fwrite(data, 1, len, file_);
+    if (std::fwrite(data, 1, len, file_) != len) {
+        ReportError(ErrorCode::WriteFailed, "FileSink write failed");
+    }
 }
 
 void FileSink::Flush() {
     if (file_) {
-        std::fflush(file_);
+        if (std::fflush(file_) != 0) {
+            ReportError(ErrorCode::FlushFailed, "FileSink flush failed");
+        }
     }
 }
 
