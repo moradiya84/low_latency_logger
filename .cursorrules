@@ -1,0 +1,53 @@
+# Cursor Rules for Low-Latency Logger Project
+
+## Code Analysis Requirements
+
+### Before Writing Any Code:
+1. **ALWAYS analyze existing non-empty files first** - Read and understand:
+   - Related header files in `include/`
+   - Implementation files in `src/`
+   - Internal utilities in `internal/`
+
+2. **Reuse existing code** - Always prefer:
+   - Existing functions and utilities from header files
+   - Established patterns and conventions
+   - Existing macros and constants (e.g., `LOGGER_FORCE_INLINE`, `kCacheLineSize`)
+   - Platform abstractions from `internal/platform.h`
+
+## Code Writing Guidelines
+
+### Consistency Requirements:
+- **Follow existing patterns** - Match the style and structure of similar code in the project
+- **Use existing variables** - Reuse constants, enums, and configuration values from headers
+- **Leverage existing functions** - Don't reimplement what already exists in the codebase
+- **Maintain architecture** - Respect the SPSC ring buffer design, lock-free patterns, and cache-line alignment
+
+### Code Organization:
+- **Header files** (`include/`) - Declarations, interfaces, and public APIs
+- **Source files** (`src/`) - Implementations
+- **Internal files** (`internal/`) - Platform-specific code, utilities, and implementation details
+
+### Performance Constraints:
+- No heap allocations in hot paths
+- Use lock-free data structures
+- Cache-line align structures using `internal::kCacheLineSize`
+- Use `LOGGER_FORCE_INLINE` for performance-critical functions
+- Prefer TSC (Time Stamp Counter) for timestamps via `internal::ReadTsc()`
+
+### Memory Ordering:
+- Use acquire/release semantics for atomics
+- Follow existing memory ordering patterns in `internal/ring_buffer.h`
+
+## Workflow
+
+1. **Before coding**: Read relevant existing files to understand patterns
+2. **During coding**: Reference and reuse existing code, variables, and functions
+3. **After coding**: Verify consistency with existing codebase style and patterns
+
+## Prohibited Practices
+
+-  Writing code without first analyzing existing similar implementations
+-  Creating new functions when equivalent ones exist
+-  Defining new constants when they already exist in headers
+-  Ignoring existing patterns and conventions
+-  Implementing platform-specific code without using `internal/platform.h` abstractions
