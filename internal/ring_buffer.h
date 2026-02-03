@@ -65,6 +65,14 @@ class SpscRingBuffer {
      * No thread creation.
      */
     SpscRingBuffer() noexcept {
+        // Compile-time layout checks (type is complete at instantiation).
+        using Self = SpscRingBuffer<T, Capacity>;
+        static_assert(offsetof(Self, read_index_) - offsetof(Self, write_index_) >= kCacheLineSize,
+                      "Producer and Consumer indices must be on separate cache lines");
+        static_assert(offsetof(Self, storage_) - offsetof(Self, read_index_) >= kCacheLineSize,
+                      "Storage must be on a separate cache line from indices");
+        static_assert(offsetof(Self, storage_) - offsetof(Self, write_index_) >= kCacheLineSize,
+                      "Storage must be on a separate cache line from indices");
         // Atomic indices initialized to 0 by member initializers.
         // Storage is uninitialized raw memory.
     }
@@ -281,14 +289,6 @@ class SpscRingBuffer {
     // Aligned to cache line to prevent false sharing with indices.
     // Also aligned to T to satisfy element requirements.
     alignas(kCacheLineSize) alignas(T) unsigned char storage_[Capacity * sizeof(T)];
-
-    // Compile-time layout check to ensure padding works as intended
-    static_assert(offsetof(SpscRingBuffer, read_index_) - offsetof(SpscRingBuffer, write_index_) >= kCacheLineSize,
-                  "Producer and Consumer indices must be on separate cache lines");
-    static_assert(offsetof(SpscRingBuffer, storage_) - offsetof(SpscRingBuffer, read_index_) >= kCacheLineSize,
-                  "Storage must be on a separate cache line from indices");
-    static_assert(offsetof(SpscRingBuffer, storage_) - offsetof(SpscRingBuffer, write_index_) >= kCacheLineSize,
-                  "Storage must be on a separate cache line from indices");
 };
 
 } // namespace internal
