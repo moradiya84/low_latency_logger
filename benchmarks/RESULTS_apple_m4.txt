@@ -1,0 +1,27 @@
+sizeof(LogRecord)=1792 bytes, kCacheLineSize=128, ring capacity=16384 records (28.0 MiB)
+samples=2000000, paced rate=500000 msgs/s, hw threads=10
+
+Timer self-cost (back-to-back now() calls, i.e. measurement floor):
+  empty timed region                 n=1000000   p50=41     p99=42     p99.9=42      max=23417     (ns)
+  NOTE: on Apple silicon the clock ticks at 24 MHz, so single-call readings are
+        quantised to ~41 ns steps. Compare latency to this floor, and rely on the
+        batch-amortised row for sub-50 ns resolution.
+
+[1] low_latency_logger @ 500000 msgs/s paced, capacity=16384 records
+  Log() per call                     n=2000000   p50=42     p99=83     p99.9=375     max=182334    (ns)
+  Log() batch-amortised (100/batch)  n=20000     p50=51     p99=163    p99.9=221     max=3329      (ns)
+  drops during paced run: 0 (clean)
+
+[2] Burst (producer at max speed, 5000000 attempts)
+  producer-side attempted rate : 272.59 M msgs/s
+  accepted / dropped           : 142810 / 4857190 (97.14% dropped; drop-on-full is by design)
+  end-to-end delivered rate    : 6.92 M msgs/s (incl. drain)
+  CORRECTNESS: accepted=142810, reached sink=142810 -> PASS (no loss of accepted records)
+
+[3] Baseline: synchronous fprintf() to file (stdio-buffered), same rate
+  fprintf per call                   n=2000000   p50=83     p99=1500   p99.9=5000    max=13837375  (ns)
+
+[4] Baseline: naive async logger (mutex + std::queue<std::string> + condvar), same rate
+  mutex+queue per call               n=2000000   p50=583    p99=1208   p99.9=7583    max=225458    (ns)
+
+Record these alongside the numbers: chip/OS, compiler+version, flags (Release/-O3), date.

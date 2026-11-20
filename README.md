@@ -36,7 +36,7 @@ This is not just a feature—it's the **fundamental design principle** that driv
 │  (App Thread)   │ ───────────────►   │   (Background)   │
 │                 │    Atomics Only    │                  │
 │  • Log()        │                    │  • Drain buffer  │
-│  • ~10-50 ns    │                    │  • Batch writes  │
+│  • ~42 ns p50   │                    │  • Batch writes  │
 └─────────────────┘                    └────────┬─────────┘
                                                 │
                                                 ▼
@@ -134,12 +134,32 @@ All fields are cache-line padded to prevent false sharing in the ring buffer.
 
 ## Performance Characteristics
 
-| Metric | Target |
-|--------|--------|
-| Hot-path latency | < 100 ns (typical) |
-| Memory allocations in hot path | 0 |
-| Lock acquisitions in hot path | 0 |
-| Memory ordering | Acquire/Release (no seq_cst) |
+Measured on [Apple M4 variant], [macOS version], [clang version], `-O3`, [date].
+Producer-side `Log()` latency, paced at 500K msgs/s, 2M calls, 64-byte message,
+zero drops.
+
+| Logger | p50 | p99 | p99.9 |
+|--------|-----|-----|-------|
+| **This logger** | 42 ns | 83 ns | 375 ns |
+| Synchronous `fprintf` (buffered) | 83 ns | 1,500 ns | 5,000 ns |
+| Mutex + `std::queue<std::string>` async | 583 ns | 1,208 ns | 7,583 ns |
+
+Batch-averaged (100 calls/sample): ~51 ns mean, p99 163 ns.
+
+**Measurement notes**
+- Apple silicon's clock ticks at 24 MHz, so single-call readings are quantised to
+  ~41 ns steps (the measured timer floor is 41 ns). The batch-averaged row gives
+  finer resolution but smooths the tail.
+- Burst test (5M calls at max speed): 97% dropped by design (drop-on-full policy);
+  all 142,810 accepted records reached the sink (no loss). Delivered rate: 6.9M msgs/s.
+- Each `LogRecord` is 1792 bytes (fields are cache-line padded, 128 B lines on M4).
+
+### Reproduce
+```sh
+clang++ -std=c++17 -O3 -DNDEBUG benchmarks/log_throughput.cpp \
+  src/formatter.cpp src/sink.cpp src/clock.cpp src/encoder.cpp -o log_throughput
+./log_throughput
+```
 
 ---
 
